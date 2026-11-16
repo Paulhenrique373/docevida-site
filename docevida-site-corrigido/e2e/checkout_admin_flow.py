@@ -1,0 +1,67 @@
+import asyncio, re
+from playwright.async_api import async_playwright
+import os
+EXE=os.environ.get("PW_CHROMIUM")  # caminho do Chromium; vazio = navegador padrão do Playwright
+B=os.environ.get("BASE_URL","http://localhost:4300")
+async def main():
+    async with async_playwright() as p:
+        b=await p.chromium.launch(executable_path=EXE or None)
+        ctx=await b.new_context(viewport={"width":320,"height":640})
+        page=await ctx.new_page()
+        failed=set(); errs=[]
+        page.on("requestfailed", lambda r: failed.add(re.sub(r"(https?://[^/]+).*",r"\1",r.url)))
+        page.on("console", lambda m: errs.append(m.text[:200]) if m.type=="error" and "ERR_NAME" not in m.text else None)
+        page.on("pageerror", lambda e: errs.append("pageerror "+str(e)[:200]))
+        await page.goto(B+"/produtos"); await page.wait_for_timeout(800)
+        await page.click('[data-testid="add-to-cart-doce-de-ninho-btn"]')
+        await page.click('[data-testid="add-to-cart-cookie-caseiro-btn"]')
+        # carrinho no celular pequeno
+        await page.get_by_label(re.compile("carrinho", re.I)).first.click()
+        await page.wait_for_selector('[data-testid="cart-drawer"]')
+        print("cart: itens", await page.locator('[data-testid^="cart-item-"]').count())
+        await page.click('[data-testid="cart-checkout-btn"]')
+        await page.wait_for_selector('[data-testid="order-modal"]')
+        dims=await page.evaluate("(()=>{const d=document.querySelector('[data-testid=order-modal]');const sc=d.querySelector('[data-lenis-prevent]');return {dialogW:d.clientWidth, dialogScroll:d.scrollWidth, innerScrollW:sc.scrollWidth, innerClientW:sc.clientWidth, h:d.getBoundingClientRect().height, vh:innerHeight}})()")
+        print("modal 320px:", dims)
+        # validação: enviar vazio
+        await page.click('[data-testid="order-review-btn"]')
+        print("erro nome visível:", await page.get_by_text("Informe seu nome.").is_visible())
+        await page.fill('[data-testid="order-input-nome"]',"Cliente Teste")
+        await page.fill('[data-testid="order-input-telefone"]',"11 98888-7777")
+        await page.click('[data-testid="order-fulfillment-entrega"]')
+        await page.fill('[data-testid="order-input-endereco"]',"Rua das Flores 10, Cidade Tiradentes")
+        await page.click('[data-testid="order-review-btn"]')
+        await page.wait_for_selector('[data-testid="order-review"]')
+        await page.click('[data-testid="order-confirm-btn"]')
+        await page.wait_for_selector('[data-testid="order-code"]')
+        code=(await page.inner_text('[data-testid="order-code"]')).strip()
+        token=(await page.inner_text('[data-testid="order-token"]')).strip()
+        print("pedido:", code, "token len", len(token))
+        await page.screenshot(path="/tmp/shot_success_320.png")
+        await page.click('[data-testid="order-track-btn"]')
+        await page.wait_for_selector('[data-testid="track-result"]')
+        print("tracking status:", await page.locator('[data-testid="track-result"] [data-testid^="status-badge-"]').first.inner_text())
+        print("sem dados pessoais na página:", "Cliente Teste" not in await page.content() and "Flores" not in await page.content())
+        # carrinho foi limpo?
+        # admin
+        a=await b.new_context(viewport={"width":390,"height":800}); ap=await a.new_page()
+        await ap.goto(B+"/admin"); await ap.wait_for_selector('[data-testid="admin-login-form"]')
+        await ap.fill('[data-testid="admin-username"]',"dona"); await ap.fill('[data-testid="admin-password"]',"errada-errada")
+        await ap.click('[data-testid="admin-login-btn"]'); await ap.wait_for_selector('[data-testid="admin-login-error"]')
+        print("login errado:", await ap.inner_text('[data-testid="admin-login-error"]'))
+        await ap.fill('[data-testid="admin-password"]',"senha-segura-1234"); await ap.click('[data-testid="admin-login-btn"]')
+        await ap.wait_for_selector('[data-testid="admin-app"]')
+        await ap.click(f'[data-testid="admin-order-{code}"]'); await ap.wait_for_selector('[data-testid="admin-order-detail"]')
+        await ap.click('[data-testid="admin-set-confirmed"]'); await ap.wait_for_selector('[data-testid="admin-detail-error"]')
+        print("confirmar sem total:", await ap.inner_text('[data-testid="admin-detail-error"]'))
+        await ap.fill('[data-testid="admin-total-input"]',"45,90"); await ap.click('[data-testid="admin-total-save"]')
+        await ap.wait_for_selector('text=R$ 45,90')
+        await ap.click('[data-testid="admin-set-confirmed"]'); await ap.wait_for_selector('[data-testid="status-badge-confirmed"]')
+        await ap.screenshot(path="/tmp/shot_admin_390.png")
+        # cliente atualiza
+        await page.click("text=Atualizar status"); await page.wait_for_timeout(800)
+        print("cliente vê:", await page.locator('[data-testid="track-result"] [data-testid^="status-badge-"]').first.inner_text(), "| total:", await page.inner_text('[data-testid="track-total"]'))
+        print("falhas de rede (hosts):", failed or "nenhuma")
+        print("erros de console (exceto DNS):", errs or "nenhum")
+        await b.close()
+asyncio.run(main())

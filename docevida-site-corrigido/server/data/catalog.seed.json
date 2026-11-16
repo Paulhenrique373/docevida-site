@@ -1,0 +1,90 @@
+[
+  {
+    "id": "doce-de-ninho",
+    "name": "Doce de Ninho"
+  },
+  {
+    "id": "docinho-cacau-coco",
+    "name": "Docinho de Cacau com Coco"
+  },
+  {
+    "id": "brigadeiro-morango-ninho",
+    "name": "Brigadeiro de Morango com Ninho Desnatado"
+  },
+  {
+    "id": "brigadeiro-banana-zero",
+    "name": "Brigadeiro de Banana Zero Açúcar"
+  },
+  {
+    "id": "beijinho-morango-zero",
+    "name": "Beijinho de Morango Zero Açúcar"
+  },
+  {
+    "id": "brownie-proteico",
+    "name": "Brownie Proteico"
+  },
+  {
+    "id": "muffin-banana-proteico",
+    "name": "Muffin de Banana Proteico"
+  },
+  {
+    "id": "muffin-abacaxi",
+    "name": "Muffin de Abacaxi"
+  },
+  {
+    "id": "biscoito-maca-canela",
+    "name": "Biscoito de Maçã e Canela"
+  },
+  {
+    "id": "biscoito-coco-banana",
+    "name": "Biscoito de Coco com Banana"
+  },
+  {
+    "id": "cookie-caseiro",
+    "name": "Cookie Caseiro"
+  },
+  {
+    "id": "doce-de-ninho-cx6",
+    "name": "Doce de Ninho — Caixa com 6"
+  },
+  {
+    "id": "docinho-cacau-coco-cx6",
+    "name": "Docinho de Cacau com Coco — Caixa com 6"
+  },
+  {
+    "id": "brigadeiro-morango-ninho-cx6",
+    "name": "Brigadeiro de Morango com Ninho Desnatado — Caixa com 6"
+  },
+  {
+    "id": "brigadeiro-banana-zero-cx6",
+    "name": "Brigadeiro de Banana Zero Açúcar — Caixa com 6"
+  },
+  {
+    "id": "beijinho-morango-zero-cx6",
+    "name": "Beijinho de Morango Zero Açúcar — Caixa com 6"
+  },
+  {
+    "id": "brownie-proteico-cx6",
+    "name": "Brownie Proteico — Caixa com 6"
+  },
+  {
+    "id": "muffin-banana-proteico-cx6",
+    "name": "Muffin de Banana Proteico — Caixa com 6"
+  },
+  {
+    "id": "muffin-abacaxi-cx6",
+    "name": "Muffin de Abacaxi — Caixa com 6"
+  },
+  {
+    "id": "biscoito-maca-canela-cx6",
+    "name": "Biscoito de Maçã e Canela — Caixa com 6"
+  },
+  {
+    "id": "biscoito-coco-banana-cx6",
+    "name": "Biscoito de Coco com Banana — Caixa com 6"
+  },
+  {
+    "id": "cookie-caseiro-cx6",
+    "name": "Cookie Caseiro — Caixa com 6"
+  }
+]
