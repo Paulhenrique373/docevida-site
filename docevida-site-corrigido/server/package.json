@@ -16,8 +16,14 @@
   "dependencies": {
     "better-sqlite3": "^11.10.0",
     "cors": "^2.8.6",
+    "docevida": "file:..",
     "express": "^4.22.3",
     "express-rate-limit": "^7.5.1",
+    "firebase-admin": "^13.10.0",
     "helmet": "^7.2.0"
+  },
+  "overrides": {
+    "@firebase/database-compat": "2.0.11",
+    "@firebase/database": "1.0.20"
   }
 }

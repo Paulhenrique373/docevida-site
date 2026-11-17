@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -7,13 +7,13 @@ function int(value, name, { min = 0, max = Number.MAX_SAFE_INTEGER, fallback = n
   if (value === undefined || value === '') return fallback;
   const n = Number(value);
   if (!Number.isInteger(n) || n < min || n > max) {
-    throw new Error(`Variável de ambiente inválida: ${name} deve ser um inteiro entre ${min} e ${max}.`);
+    throw new Error(`VariÃ¡vel de ambiente invÃ¡lida: ${name} deve ser um inteiro entre ${min} e ${max}.`);
   }
   return n;
 }
 
 function loadDotEnv(file) {
-  // Leitor mínimo de .env (sem dependência). Variáveis já definidas no ambiente têm prioridade.
+  // Leitor mÃ­nimo de .env (sem dependÃªncia). VariÃ¡veis jÃ¡ definidas no ambiente tÃªm prioridade.
   if (!fs.existsSync(file)) return;
   for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
@@ -30,9 +30,9 @@ function loadConfig(env = process.env, overrides = {}) {
   let secret = overrides.orderTokenSecret ?? env.ORDER_TOKEN_SECRET ?? '';
   if (!secret) {
     if (production) {
-      throw new Error('ORDER_TOKEN_SECRET é obrigatório em produção (mínimo de 32 caracteres).');
+      throw new Error('ORDER_TOKEN_SECRET Ã© obrigatÃ³rio em produÃ§Ã£o (mÃ­nimo de 32 caracteres).');
     }
-    // Desenvolvimento: gera e reaproveita um segredo local para que as chaves dos pedidos sobrevivam a reinícios.
+    // Desenvolvimento: gera e reaproveita um segredo local para que as chaves dos pedidos sobrevivam a reinÃ­cios.
     const devFile = path.join(root, 'data', '.dev-secret');
     if (dbPath === ':memory:') secret = crypto.randomBytes(32).toString('hex');
     else if (fs.existsSync(devFile)) secret = fs.readFileSync(devFile, 'utf8').trim();
@@ -51,6 +51,8 @@ function loadConfig(env = process.env, overrides = {}) {
     production,
     port: int(env.PORT, 'PORT', { min: 1, max: 65535, fallback: 4000 }),
     databasePath: dbPath,
+    firebaseProjectId: env.FIREBASE_PROJECT_ID || '',
+    firebaseServiceAccountPath: env.FIREBASE_SERVICE_ACCOUNT_PATH || 'secrets/firebase-service-account.json',
     orderTokenSecret: secret,
     corsOrigins,
     deliveryFeeCents: overrides.deliveryFeeCents !== undefined
@@ -68,3 +70,4 @@ function loadConfig(env = process.env, overrides = {}) {
 }
 
 module.exports = { loadConfig, loadDotEnv };
+
