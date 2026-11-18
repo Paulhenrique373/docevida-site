@@ -1,15 +1,11 @@
-import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, Hand, HeartHandshake, Info, Leaf, Minus, Plus, Recycle, Sparkles } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowRight, Check, Hand, HeartHandshake, Info, Leaf, Recycle, Sparkles } from "lucide-react";
 import usePageMeta from "../hooks/usePageMeta";
 import Reveal from "../components/Reveal";
 import Marquee from "../components/Marquee";
 import { IMG } from "../config/images";
 import { products } from "../data/products";
-import PackSelector, { pickTarget } from "../components/PackSelector";
-import { useCart } from "../context/CartContext";
 import { useUI } from "../context/UIContext";
 import ProductImage from "../components/ProductImage";
 import { useCatalogVersion } from "../hooks/useCatalog";
@@ -165,12 +161,8 @@ function Impact() {
 }
 
 function FlagshipSection() {
-    const { add } = useCart();
-    const { setOrderOpen } = useUI();
+    const { openProduct } = useUI();
     const product = products[0];
-    const [qty, setQty] = useState(1);
-    const [pack, setPack] = useState("un");
-    const target = pickTarget(product, pack);
 
     return (
         <section aria-labelledby="flagship-title" className="mx-auto max-w-7xl px-5 py-8 sm:px-8 lg:py-14">
@@ -214,64 +206,13 @@ function FlagshipSection() {
                         </p>
 
                         <div className="mt-6">
-                            <PackSelector product={product} value={pack} onChange={setPack} />
-                        </div>
-
-                        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-                            <p className="font-serif text-2xl text-chocolate" data-testid="flagship-price">
-                                Preço sob consulta
-                            </p>
-                            <p className="inline-flex items-center gap-2 rounded-full bg-moss-light px-3.5 py-1.5 text-xs font-semibold text-moss" data-testid="flagship-availability">
-                                <span className="h-2 w-2 rounded-full bg-moss" aria-hidden="true" /> Disponível
-                            </p>
-                        </div>
-
-                        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                            <div className="flex items-center rounded-full border border-chocolate/15 bg-cream">
-                                <button
-                                    type="button"
-                                    onClick={() => setQty((q) => Math.max(1, q - 1))}
-                                    data-testid="flagship-qty-dec"
-                                    aria-label="Diminuir quantidade"
-                                    className="grid h-11 w-11 place-items-center rounded-full transition-colors hover:bg-oat"
-                                >
-                                    <Minus size={15} />
-                                </button>
-                                <span className="w-8 text-center text-sm font-semibold" data-testid="flagship-qty">
-                                    {qty}
-                                </span>
-                                <button
-                                    type="button"
-                                    onClick={() => setQty((q) => q + 1)}
-                                    data-testid="flagship-qty-inc"
-                                    aria-label="Aumentar quantidade"
-                                    className="grid h-11 w-11 place-items-center rounded-full transition-colors hover:bg-oat"
-                                >
-                                    <Plus size={15} />
-                                </button>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    add(target.id, qty);
-                                    toast.success(`${target.name} adicionado ao carrinho`);
-                                }}
-                                data-testid="flagship-add-btn"
-                                className="inline-flex flex-1 items-center justify-center rounded-full bg-chocolate px-7 py-4 text-sm font-semibold tracking-[0.15em] text-cream transition-all duration-300 hover:-translate-y-0.5 hover:bg-caramel"
+                            <Link
+                                to="/produtos"
+                                data-testid="flagship-boxes-link"
+                                className="inline-flex rounded-full bg-chocolate px-7 py-4 text-sm font-semibold tracking-[0.15em] text-cream transition-colors hover:bg-caramel"
                             >
-                                ADICIONAR AO CARRINHO
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    add(target.id, qty);
-                                    setOrderOpen(true);
-                                }}
-                                data-testid="flagship-whatsapp-btn"
-                                className="inline-flex flex-1 items-center justify-center rounded-full border border-chocolate/25 px-7 py-4 text-sm font-semibold tracking-[0.15em] text-chocolate transition-colors hover:border-chocolate hover:bg-oat"
-                            >
-                                PEDIR PELO WHATSAPP
-                            </button>
+                                VER CAIXAS E BOLOS
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -458,6 +399,7 @@ function MenuTeaser() {
                         </li>
                     ))}
                 </ul>
+                <p className="mx-auto mt-8 max-w-xl text-center text-taupe">Também temos caixas de 10 a 50 unidades e bolos de 1 a 3 kg. Veja os tamanhos e preços no cardápio.</p>
                 <div className="mt-8 text-center">
                     <Link to="/produtos" className="inline-flex rounded-full bg-chocolate px-7 py-3.5 text-sm font-semibold tracking-[0.15em] text-cream transition-colors hover:bg-caramel">
                         VER CARDÁPIO COMPLETO

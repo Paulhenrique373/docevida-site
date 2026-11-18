@@ -4,7 +4,8 @@ import usePageMeta from "../hooks/usePageMeta";
 import Reveal from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
 import { IMG } from "../config/images";
-import { products, upcomingProducts } from "../data/products";
+import { products, upcomingProducts, packages } from "../data/products";
+import PackageCard from "../components/PackageCard";
 import { useCatalogVersion } from "../hooks/useCatalog";
 
 const FILTERS = [
@@ -80,7 +81,25 @@ export default function Produtos() {
                 </div>
             </header>
 
+            {filter === "todos" && (
+                <section aria-labelledby="caixas-title" className="mx-auto max-w-7xl px-5 pt-12 sm:px-8" data-testid="caixas-section">
+                    <h2 id="caixas-title" className="font-serif text-3xl text-chocolate sm:text-4xl">Caixas e bolos</h2>
+                    <p className="mt-2 max-w-xl text-taupe">Escolha o tamanho e adicione ao carrinho. Informe os sabores que você quer nas observações do pedido.</p>
+                    <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {packages.map((pkg) => (
+                            <PackageCard key={pkg.id} pkg={pkg} />
+                        ))}
+                    </div>
+                </section>
+            )}
+
             <section aria-label="Lista de produtos" className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8 lg:pb-32">
+                {filter === "todos" && (
+                    <div className="mb-8">
+                        <h2 className="font-serif text-3xl text-chocolate sm:text-4xl">Nossos sabores</h2>
+                        <p className="mt-2 max-w-xl text-taupe">Os sabores são vendidos nas caixas acima. Informe os que você quer nas observações do pedido.</p>
+                    </div>
+                )}
                 {available.length === 0 && upcoming.length === 0 ? (
                     <p className="py-16 text-center text-taupe">Nenhum produto nesta categoria ainda — novos sabores chegam em breve.</p>
                 ) : (

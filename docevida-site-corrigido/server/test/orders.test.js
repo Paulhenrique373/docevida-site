@@ -276,8 +276,11 @@ test('catálogo público reflete preços/disponibilidade definidos pela loja', a
   try {
     const { cookie, csrf } = await loginAdmin(ctx);
     let cat = await api(ctx.base, '/api/catalog');
-    assert.equal(cat.json.products.length, 22);
-    assert.ok(cat.json.products.every((p) => p.priceCents === null));
+    assert.equal(cat.json.products.length, 31);
+    assert.ok(cat.json.products.filter((p) => !p.id.startsWith('pkg-')).every((p) => p.priceCents === null));
+    assert.ok(cat.json.products.filter((p) => p.id.startsWith('pkg-')).every((p) => p.priceCents > 0));
+    assert.equal(cat.json.products.find((p) => p.id === 'pkg-caixa-brigadeiros-10').priceCents, 3500);
+    assert.equal(cat.json.products.find((p) => p.id === 'pkg-bolo-inteiro-3').priceCents, 23000);
     await api(ctx.base, '/api/admin/products/cookie-caseiro', { method: 'PATCH', cookie, csrf, body: { priceCents: 650, available: false } });
     cat = await api(ctx.base, '/api/catalog');
     const cookie1 = cat.json.products.find((p) => p.id === 'cookie-caseiro');

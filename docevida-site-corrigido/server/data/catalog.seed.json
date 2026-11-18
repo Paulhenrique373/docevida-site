@@ -44,47 +44,103 @@
     "name": "Cookie Caseiro"
   },
   {
-    "id": "doce-de-ninho-cx6",
-    "name": "Doce de Ninho — Caixa com 6"
+    "id": "pkg-caixa-brigadeiros-10",
+    "name": "Caixa de Brigadeiros — 10 unidades",
+    "priceCents": 3500
   },
   {
-    "id": "docinho-cacau-coco-cx6",
-    "name": "Docinho de Cacau com Coco — Caixa com 6"
+    "id": "pkg-caixa-brigadeiros-20",
+    "name": "Caixa de Brigadeiros — 20 unidades",
+    "priceCents": 6500
   },
   {
-    "id": "brigadeiro-morango-ninho-cx6",
-    "name": "Brigadeiro de Morango com Ninho Desnatado — Caixa com 6"
+    "id": "pkg-caixa-brigadeiros-30",
+    "name": "Caixa de Brigadeiros — 30 unidades",
+    "priceCents": 9000
   },
   {
-    "id": "brigadeiro-banana-zero-cx6",
-    "name": "Brigadeiro de Banana Zero Açúcar — Caixa com 6"
+    "id": "pkg-caixa-brigadeiros-50",
+    "name": "Caixa de Brigadeiros — 50 unidades",
+    "priceCents": 14000
   },
   {
-    "id": "beijinho-morango-zero-cx6",
-    "name": "Beijinho de Morango Zero Açúcar — Caixa com 6"
+    "id": "pkg-caixa-doces-variados-10",
+    "name": "Caixa de Doces Variados — 10 unidades",
+    "priceCents": 3800
   },
   {
-    "id": "brownie-proteico-cx6",
-    "name": "Brownie Proteico — Caixa com 6"
+    "id": "pkg-caixa-doces-variados-20",
+    "name": "Caixa de Doces Variados — 20 unidades",
+    "priceCents": 7000
   },
   {
-    "id": "muffin-banana-proteico-cx6",
-    "name": "Muffin de Banana Proteico — Caixa com 6"
+    "id": "pkg-caixa-doces-variados-30",
+    "name": "Caixa de Doces Variados — 30 unidades",
+    "priceCents": 9800
   },
   {
-    "id": "muffin-abacaxi-cx6",
-    "name": "Muffin de Abacaxi — Caixa com 6"
+    "id": "pkg-caixa-doces-variados-50",
+    "name": "Caixa de Doces Variados — 50 unidades",
+    "priceCents": 15000
   },
   {
-    "id": "biscoito-maca-canela-cx6",
-    "name": "Biscoito de Maçã e Canela — Caixa com 6"
+    "id": "pkg-caixa-mista-10",
+    "name": "Caixa Mista — Brigadeiros + Doces — 10 unidades",
+    "priceCents": 3600
   },
   {
-    "id": "biscoito-coco-banana-cx6",
-    "name": "Biscoito de Coco com Banana — Caixa com 6"
+    "id": "pkg-caixa-mista-20",
+    "name": "Caixa Mista — Brigadeiros + Doces — 20 unidades",
+    "priceCents": 6800
   },
   {
-    "id": "cookie-caseiro-cx6",
-    "name": "Cookie Caseiro — Caixa com 6"
+    "id": "pkg-caixa-mista-30",
+    "name": "Caixa Mista — Brigadeiros + Doces — 30 unidades",
+    "priceCents": 9500
+  },
+  {
+    "id": "pkg-caixa-mista-50",
+    "name": "Caixa Mista — Brigadeiros + Doces — 50 unidades",
+    "priceCents": 14500
+  },
+  {
+    "id": "pkg-caixa-biscoitos-10",
+    "name": "Caixa de Biscoitos — 10 unidades",
+    "priceCents": 2800
+  },
+  {
+    "id": "pkg-caixa-biscoitos-20",
+    "name": "Caixa de Biscoitos — 20 unidades",
+    "priceCents": 5000
+  },
+  {
+    "id": "pkg-caixa-biscoitos-30",
+    "name": "Caixa de Biscoitos — 30 unidades",
+    "priceCents": 7200
+  },
+  {
+    "id": "pkg-caixa-biscoitos-50",
+    "name": "Caixa de Biscoitos — 50 unidades",
+    "priceCents": 11000
+  },
+  {
+    "id": "pkg-bolo-inteiro-1",
+    "name": "Bolo Inteiro — 1 kg",
+    "priceCents": 8500
+  },
+  {
+    "id": "pkg-bolo-inteiro-2",
+    "name": "Bolo Inteiro — 2 kg",
+    "priceCents": 16000
+  },
+  {
+    "id": "pkg-bolo-inteiro-3",
+    "name": "Bolo Inteiro — 3 kg",
+    "priceCents": 23000
+  },
+  {
+    "id": "pkg-pedaco-bolo-1",
+    "name": "Pedaço de Bolo — 1 fatia",
+    "priceCents": 1200
   }
 ]

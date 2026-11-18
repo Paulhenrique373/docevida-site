@@ -103,26 +103,39 @@ export const upcomingProducts = [];
 
 export const allCatalogItems = [...products, ...upcomingProducts];
 
-// Opção "Caixa com 6": cada doce ganha um produto-caixa próprio (id "<doce>-cx6"), com preço e
-// disponibilidade definidos pela loja no painel. O servidor segue sendo a autoridade de preços.
-export const BOX_UNITS = 6;
-export const boxProducts = products.map((p) => ({
-    ...p,
-    id: `${p.id}-cx${BOX_UNITS}`,
-    name: `${p.name} — Caixa com ${BOX_UNITS}`,
-    description: `Caixa com ${BOX_UNITS} unidades. ${p.description}`,
-    baseId: p.id,
-    boxOf: BOX_UNITS,
-    isNew: false,
-    featured: false,
-    price: null,
-    available: true,
-}));
-products.forEach((p, i) => {
-    p.box = boxProducts[i];
+// Caixas e bolos — tabela de preços da DoceVida. O servidor é a autoridade de preços;
+// os valores abaixo são o ponto de partida e são sobrescritos pelo catálogo do servidor.
+export const packages = [
+    { id: "pkg-caixa-brigadeiros", title: "Caixa de Brigadeiros", description: "Brigadeiros enrolados à mão, prontos para presentear ou dividir.", photoOf: "brigadeiro-morango-ninho", options: [[10, "10 unidades", 35], [20, "20 unidades", 65], [30, "30 unidades", 90], [50, "50 unidades", 140]] },
+    { id: "pkg-caixa-doces-variados", title: "Caixa de Doces Variados", description: "Uma seleção de doces variados da DoceVida.", photoOf: "docinho-cacau-coco", options: [[10, "10 unidades", 38], [20, "20 unidades", 70], [30, "30 unidades", 98], [50, "50 unidades", 150]] },
+    { id: "pkg-caixa-mista", title: "Caixa Mista — Brigadeiros + Doces", description: "Brigadeiros e doces juntos na mesma caixa.", photoOf: "doce-de-ninho", options: [[10, "10 unidades", 36], [20, "20 unidades", 68], [30, "30 unidades", 95], [50, "50 unidades", 145]] },
+    { id: "pkg-caixa-biscoitos", title: "Caixa de Biscoitos", description: "Biscoitos da DoceVida em caixa.", photoOf: "biscoito-maca-canela", options: [[10, "10 unidades", 28], [20, "20 unidades", 50], [30, "30 unidades", 72], [50, "50 unidades", 110]] },
+    { id: "pkg-bolo-inteiro", title: "Bolo Inteiro", description: "Bolo inteiro da DoceVida, nos tamanhos de 1, 2 ou 3 kg.", photoOf: null, options: [[1, "1 kg", 85], [2, "2 kg", 160], [3, "3 kg", 230]] },
+    { id: "pkg-pedaco-bolo", title: "Pedaço de Bolo", description: "Uma fatia de bolo para matar a vontade.", photoOf: null, options: [[1, "1 fatia", 12]] },
+];
+
+const photoOf = (id) => products.find((p) => p.id === id);
+export const packageItems = packages.flatMap((pkg) => {
+    const photo = pkg.photoOf ? photoOf(pkg.photoOf) : null;
+    return pkg.options.map(([qty, optionLabel, price]) => ({
+        ...base,
+        id: `${pkg.id}-${qty}`,
+        name: `${pkg.title} — ${optionLabel}`,
+        description: pkg.description,
+        price,
+        packageId: pkg.id,
+        optionLabel,
+        image: photo?.image ?? null,
+        imageSrcSet: photo?.imageSrcSet,
+    }));
+});
+packages.forEach((pkg) => {
+    pkg.items = packageItems.filter((it) => it.packageId === pkg.id);
+    pkg.image = pkg.photoOf ? photoOf(pkg.photoOf)?.image : null;
+    pkg.imageSrcSet = pkg.photoOf ? photoOf(pkg.photoOf)?.imageSrcSet : undefined;
 });
 
-export const findProduct = (id) => products.find((p) => p.id === id) || boxProducts.find((p) => p.id === id);
+export const findProduct = (id) => products.find((p) => p.id === id) || packageItems.find((p) => p.id === id);
 
 export const formatPrice = (value) =>
     value == null

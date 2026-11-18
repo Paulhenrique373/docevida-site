@@ -1,19 +1,10 @@
-import { useState } from "react";
-import { toast } from "sonner";
-import { Plus } from "lucide-react";
-import { useCart } from "../context/CartContext";
 import { useUI } from "../context/UIContext";
-import { priceLabel } from "../data/products";
 import ProductImage from "./ProductImage";
-import PackSelector, { pickTarget } from "./PackSelector";
 import { useCatalogVersion } from "../hooks/useCatalog";
 
 export default function ProductCard({ product }) {
     useCatalogVersion();
-    const { add } = useCart();
     const { openProduct } = useUI();
-    const [pack, setPack] = useState("un");
-    const target = pickTarget(product, pack);
 
     return (
         <article className="group flex flex-col" data-testid={`product-card-${product.id}`}>
@@ -45,19 +36,6 @@ export default function ProductCard({ product }) {
                             {product.name}
                         </button>
                     </h3>
-                    <button
-                        type="button"
-                        disabled={!target.available}
-                        onClick={() => {
-                            add(target.id);
-                            toast.success(`${target.name} adicionado ao carrinho`);
-                        }}
-                        data-testid={`add-to-cart-${product.id}-btn`}
-                        aria-label={`Adicionar ${target.name} ao carrinho`}
-                        className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-chocolate text-cream transition-all duration-300 hover:scale-105 hover:bg-caramel active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                        <Plus size={18} strokeWidth={2} />
-                    </button>
                 </div>
                 <p className="mt-1.5 text-sm leading-relaxed text-taupe">{product.description}</p>
                 {product.tags?.length > 0 && (
@@ -67,12 +45,7 @@ export default function ProductCard({ product }) {
                         ))}
                     </div>
                 )}
-                <div className="mt-4">
-                    <PackSelector product={product} value={pack} onChange={setPack} />
-                </div>
-                <p className="mt-3 text-sm font-semibold text-caramel" data-testid={`price-${product.id}`}>
-                    {priceLabel(target)}
-                </p>
+                <p className="mt-3 text-sm font-semibold text-caramel">Peça nas caixas e bolos</p>
             </div>
         </article>
     );

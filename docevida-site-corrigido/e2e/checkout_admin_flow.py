@@ -13,8 +13,8 @@ async def main():
         page.on("console", lambda m: errs.append(m.text[:200]) if m.type=="error" and "ERR_NAME" not in m.text else None)
         page.on("pageerror", lambda e: errs.append("pageerror "+str(e)[:200]))
         await page.goto(B+"/produtos"); await page.wait_for_timeout(800)
-        await page.click('[data-testid="add-to-cart-doce-de-ninho-btn"]')
-        await page.click('[data-testid="add-to-cart-cookie-caseiro-btn"]')
+        await page.click('[data-testid="add-to-cart-pkg-caixa-brigadeiros-10-btn"]')
+        await page.click('[data-testid="add-to-cart-pkg-caixa-biscoitos-10-btn"]')
         # carrinho no celular pequeno
         await page.get_by_label(re.compile("carrinho", re.I)).first.click()
         await page.wait_for_selector('[data-testid="cart-drawer"]')

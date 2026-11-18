@@ -101,9 +101,9 @@ function migrate(db) {
 // Cadastra produtos novos do catálogo-base SEM sobrescrever preço/disponibilidade já ajustados pela loja.
 function seedCatalog(db) {
   const seed = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'catalog.seed.json'), 'utf8'));
-  const insert = db.prepare('INSERT OR IGNORE INTO products (id, name, price_cents, available, updated_at) VALUES (?, ?, NULL, 1, ?)');
+  const insert = db.prepare('INSERT OR IGNORE INTO products (id, name, price_cents, available, updated_at) VALUES (?, ?, ?, 1, ?)');
   const now = new Date().toISOString();
-  db.transaction(() => seed.forEach((p) => insert.run(p.id, p.name, now)))();
+  db.transaction(() => seed.forEach((p) => insert.run(p.id, p.name, Number.isInteger(p.priceCents) ? p.priceCents : null, now)))();
 }
 
 module.exports = { openDatabase };

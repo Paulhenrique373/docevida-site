@@ -1,31 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Info, Minus, Plus, X } from "lucide-react";
-import { toast } from "sonner";
-import { useCart } from "../context/CartContext";
+import { Info, X } from "lucide-react";
 import { useUI } from "../context/UIContext";
-import { formatPrice, priceLabel } from "../data/products";
-import PackSelector, { pickTarget } from "./PackSelector";
 import { useCatalogVersion } from "../hooks/useCatalog";
-import { isWhatsAppConfigured, whatsappUrl } from "../config/site";
-import { MAX_QTY } from "../context/CartContext";
-import { buildOrderMessage } from "../utils/orderMessage";
 import ProductImage from "./ProductImage";
 
 export default function ProductModal() {
     useCatalogVersion();
-    const { activeProduct, closeProduct, setOrderOpen } = useUI();
-    const { add } = useCart();
-    const [qty, setQty] = useState(1);
-    const [pack, setPack] = useState("un");
+    const { activeProduct, closeProduct } = useUI();
     const closeRef = useRef(null);
     const product = activeProduct;
-    const target = product ? pickTarget(product, pack) : null;
-    const unavailable = target ? !target.available : false;
 
     useEffect(() => {
-        setQty(1);
-        setPack("un");
         if (product) closeRef.current?.focus();
     }, [product]);
 
@@ -35,29 +22,6 @@ export default function ProductModal() {
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
     }, [product, closeProduct]);
-
-    const handleAdd = () => {
-        add(target.id, qty);
-        toast.success(`${target.name} adicionado ao carrinho`);
-        closeProduct();
-    };
-
-    const handleWhatsApp = () => {
-        add(target.id, qty);
-        closeProduct();
-        setOrderOpen(true);
-    };
-
-    const message = product
-        ? buildOrderMessage({
-              items: [{ ...target, qty }],
-              hasPrices: target.price != null,
-              subtotal: target.price != null ? target.price * qty : 0,
-              nome: "",
-              obs: "",
-              formatPrice,
-          })
-        : "";
 
     return (
         <AnimatePresence>
@@ -130,90 +94,17 @@ export default function ProductModal() {
                                 )}
                             </div>
 
-                            <div className="mt-6">
-                                <PackSelector product={product} value={pack} onChange={setPack} />
-                            </div>
-
-                            <div className="mt-6 flex flex-wrap items-end justify-between gap-4" data-testid="product-modal-price">
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-chocolate/70">Preço</p>
-                                    <p className="mt-1 font-serif text-2xl text-chocolate">{priceLabel(target)}</p>
-                                    {target.price == null && <p className="text-xs text-taupe">valor em definição</p>}
-                                </div>
-                                <p className="inline-flex items-center gap-2 rounded-full bg-moss-light px-3.5 py-1.5 text-xs font-semibold text-moss">
-                                    <span className={`h-2 w-2 rounded-full ${unavailable ? "bg-chocolate/30" : "bg-moss"}`} aria-hidden="true" />
-                                    {unavailable ? "Indisponível no momento" : "Disponível"}
-                                </p>
-                            </div>
-
-                            {unavailable ? (
-                                <button
-                                    type="button"
-                                    disabled
-                                    data-testid="product-modal-unavailable-btn"
-                                    className="mt-7 w-full cursor-not-allowed rounded-full bg-chocolate/10 py-4 text-sm font-semibold tracking-[0.15em] text-chocolate/50"
-                                >
-                                    INDISPONÍVEL NO MOMENTO
-                                </button>
-                            ) : (
-                                <>
-                                    <div className="mt-7 flex items-center gap-4">
-                                        <div className="flex items-center rounded-full border border-chocolate/15">
-                                            <button
-                                                type="button"
-                                                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                                                data-testid="product-modal-qty-dec"
-                                                aria-label="Diminuir quantidade"
-                                                className="grid h-11 w-11 place-items-center rounded-full text-chocolate transition-colors hover:bg-oat"
-                                            >
-                                                <Minus size={16} />
-                                            </button>
-                                            <span className="w-8 text-center text-sm font-semibold" data-testid="product-modal-qty" aria-live="polite">
-                                                {qty}
-                                            </span>
-                                            <button
-                                                type="button"
-                                                onClick={() => setQty((q) => Math.min(MAX_QTY, q + 1))}
-                                                data-testid="product-modal-qty-inc"
-                                                aria-label="Aumentar quantidade"
-                                                className="grid h-11 w-11 place-items-center rounded-full text-chocolate transition-colors hover:bg-oat"
-                                            >
-                                                <Plus size={16} />
-                                            </button>
-                                        </div>
-                                        <p className="text-sm text-taupe">Quantidade</p>
-                                    </div>
-
-                                    <div className="mt-5 flex flex-col gap-3">
-                                        <button
-                                            type="button"
-                                            onClick={handleAdd}
-                                            data-testid="product-modal-add-btn"
-                                            className="w-full rounded-full bg-chocolate py-4 text-sm font-semibold tracking-[0.15em] text-cream transition-all duration-300 hover:-translate-y-0.5 hover:bg-caramel"
-                                        >
-                                            ADICIONAR AO CARRINHO
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={handleWhatsApp}
-                                            data-testid="product-modal-whatsapp-btn"
-                                            className="w-full rounded-full border border-chocolate/25 py-4 text-sm font-semibold tracking-[0.15em] text-chocolate transition-colors hover:border-chocolate hover:bg-oat"
-                                        >
-                                            PEDIR PELO WHATSAPP
-                                        </button>
-                                        {isWhatsAppConfigured() && (
-                                            <a
-                                                href={whatsappUrl(message)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-center text-xs text-taupe underline underline-offset-4"
-                                            >
-                                                Enviar direto pelo WhatsApp
-                                            </a>
-                                        )}
-                                    </div>
-                                </>
-                            )}
+                            <p className="mt-6 text-sm leading-relaxed text-taupe" data-testid="product-modal-boxes-note">
+                                Este sabor é vendido nas caixas. Escolha o tamanho da caixa e informe o sabor que você quer nas observações do pedido.
+                            </p>
+                            <Link
+                                to="/produtos"
+                                onClick={closeProduct}
+                                data-testid="product-modal-boxes-link"
+                                className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-chocolate py-4 text-sm font-semibold tracking-[0.15em] text-cream transition-colors hover:bg-caramel"
+                            >
+                                VER CAIXAS E BOLOS
+                            </Link>
                         </div>
                     </motion.div>
                 </div>
